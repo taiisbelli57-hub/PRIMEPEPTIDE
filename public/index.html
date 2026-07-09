@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PrimePeptide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a class="brand" href="index.html" aria-label="PrimePeptide">
+        <img id="logo-img" class="brand__logo" alt="Logo PrimePeptide" style="display:none" />
+        <span id="logo-text" class="brand__fallback">PrimePeptide</span>
+      </a>
+
+      <nav class="tabs" aria-label="Filtros de produtos">
+        <button class="tab ativa" data-tab="todos">Todos os produtos</button>
+        <button class="tab" data-tab="promocao">Promoções</button>
+        <button class="tab" data-tab="combo">Combos</button>
+      </nav>
+
+      <button class="track-btn" id="btn-track">Acompanhe seu pedido</button>
+      <button class="cart-btn" id="btn-abrir-carrinho">🛒 Carrinho <span id="cart-badge" class="cart-btn__badge" style="display:none">0</span></button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <p class="hero__eyebrow">Catálogo PrimePeptide</p>
+    <h1>Produtos selecionados com atendimento direto pelo WhatsApp.</h1>
+    <p>Escolha seus produtos, envie o pedido, pague por Pix e acompanhe o status pelo código do pedido.</p>
+    <div class="search">
+      <span>🔎</span>
+      <input id="input-pesquisa" type="text" placeholder="Pesquisar produtos pelo nome..." />
+    </div>
+  </section>
+
+  <main class="grid" id="grid-produtos"></main>
+
+  <div class="overlay" id="overlay"></div>
+
+  <aside class="carrinho-painel" id="painel-carrinho">
+    <div class="carrinho-header">
+      <h2>Seu carrinho</h2>
+      <button id="btn-fechar-carrinho" class="fechar-btn">✕</button>
+    </div>
+    <div class="checkout-fields">
+      <label>Seu nome
+        <input id="cliente-nome" type="text" placeholder="Nome completo" />
+      </label>
+      <label>WhatsApp
+        <input id="cliente-telefone" type="tel" placeholder="DDD + número" />
+      </label>
+      <div class="payment-info">Forma de pagamento: <strong>Pix pelo WhatsApp</strong></div>
+    </div>
+    <div class="carrinho-lista" id="lista-carrinho"></div>
+    <div class="carrinho-footer">
+      <div class="carrinho-total"><span>Total</span><strong id="total-carrinho">R$ 0,00</strong></div>
+      <button class="btn-finalizar" id="btn-finalizar" disabled>Finalizar pedido no WhatsApp</button>
+    </div>
+  </aside>
+
+  <section class="modal" id="modal-detalhes" aria-hidden="true">
+    <div class="modal__box">
+      <button class="modal__close" id="btn-fechar-detalhes">✕</button>
+      <div id="detalhes-conteudo"></div>
+    </div>
+  </section>
+
+  <section class="modal" id="modal-track" aria-hidden="true">
+    <div class="modal__box modal__box--small">
+      <button class="modal__close" id="btn-fechar-track">✕</button>
+      <h2>Acompanhe seu pedido</h2>
+      <p class="muted">Digite o código recebido no WhatsApp. Exemplo: PP-20260709-1234</p>
+      <div class="track-form">
+        <input id="track-code" placeholder="Código do pedido" />
+        <button id="btn-consultar-pedido">Consultar</button>
+      </div>
+      <div id="track-result"></div>
+    </div>
+  </section>
+
+  <div class="toast" id="toast"></div>
+
+  <footer class="footer">
+    © 2026 PrimePeptide · <a href="admin.html">Área administrativa</a>
+  </footer>
+
+  <script src="config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

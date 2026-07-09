@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin PrimePeptide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+  <section class="login" id="login-box">
+    <form class="login-card" id="login-form">
+      <h1>Admin PrimePeptide</h1>
+      <p>Acesse para gerenciar produtos, pedidos e configurações.</p>
+      <label>Usuário<input id="login-user" required autocomplete="username"></label>
+      <label>Senha<input id="login-pass" type="password" required autocomplete="current-password"></label>
+      <button>Entrar</button>
+      <div class="error" id="login-error"></div>
+    </form>
+  </section>
+
+  <main class="admin" id="admin-box" style="display:none">
+    <header class="admin-header">
+      <div>
+        <h1>Painel PrimePeptide</h1>
+        <p>Produtos, pedidos, logo e WhatsApp.</p>
+      </div>
+      <div class="top-actions">
+        <a href="index.html" class="btn-light">Ver site</a>
+        <button id="logout" class="btn-light">Sair</button>
+      </div>
+    </header>
+
+    <nav class="admin-tabs">
+      <button class="admin-tab ativa" data-view="produtos">Produtos</button>
+      <button class="admin-tab" data-view="pedidos">Pedidos</button>
+      <button class="admin-tab" data-view="config">Configurações</button>
+    </nav>
+
+    <section id="view-produtos" class="view">
+      <div class="section-head">
+        <h2>Produtos</h2>
+        <div>
+          <button class="btn-light" id="export-json">Exportar JSON</button>
+          <button class="btn-primary" id="new-product">+ Novo produto</button>
+        </div>
+      </div>
+      <div class="table-wrap"><table><thead><tr><th>Imagem</th><th>Nome</th><th>Tipo</th><th>Preço</th><th>Ações</th></tr></thead><tbody id="products-table"></tbody></table></div>
+    </section>
+
+    <section id="view-pedidos" class="view" style="display:none">
+      <div class="section-head"><h2>Pedidos</h2><button class="btn-light" id="refresh-orders">Atualizar</button></div>
+      <div id="orders-list" class="orders"></div>
+    </section>
+
+    <section id="view-config" class="view" style="display:none">
+      <div class="admin-card">
+        <h2>Configurações do site</h2>
+        <label>Nome da loja<input id="set-store-name"></label>
+        <label>Número do WhatsApp<input id="set-whatsapp" placeholder="5519999999999"></label>
+        <label>URL da logo<input id="set-logo" placeholder="https://... ou cole uma imagem base64"></label>
+        <label>Upload da logo<input type="file" id="logo-file" accept="image/*"></label>
+        <img id="logo-preview" class="preview" style="display:none" alt="Prévia da logo">
+        <button class="btn-primary" id="save-settings">Salvar configurações</button>
+      </div>
+    </section>
+  </main>
+
+  <section class="modal" id="product-modal">
+    <form class="modal-box" id="product-form">
+      <button type="button" class="close" id="close-product-modal">✕</button>
+      <h2 id="modal-title">Novo produto</h2>
+      <input type="hidden" id="product-id">
+      <label>Nome<input id="product-name" required></label>
+      <label>Descrição<textarea id="product-description" rows="3"></textarea></label>
+      <label>Principais objetivos<textarea id="product-objectives" rows="3"></textarea></label>
+      <label>Categoria<input id="product-category"></label>
+      <label>Preço<input id="product-price" type="number" min="0" step="0.01"></label>
+      <label>Tipo<select id="product-type"><option value="normal">Produto normal</option><option value="promocao">Promoção</option><option value="combo">Combo</option></select></label>
+      <label>Imagem<input id="product-image"></label>
+      <label>Upload da imagem<input type="file" id="product-image-file" accept="image/*"></label>
+      <img id="product-preview" class="preview" style="display:none" alt="Prévia do produto">
+      <button class="btn-primary">Salvar produto</button>
+    </form>
+  </section>
+
+  <script src="config.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
