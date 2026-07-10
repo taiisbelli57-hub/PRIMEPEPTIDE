@@ -40,6 +40,7 @@ async function carregarSettings(){
     logoText.textContent = settings.STORE_NAME || 'PrimePeptide';
   }
   renderPix();
+  configurarMarca();
 }
 
 async function carregarProdutos(){
@@ -48,14 +49,7 @@ async function carregarProdutos(){
 }
 
 function bindEventos(){
-  document.querySelectorAll('.main-tab').forEach(btn => btn.addEventListener('click', () => {
-    document.querySelectorAll('.main-tab').forEach(b => b.classList.remove('ativa'));
-    btn.classList.add('ativa');
-    grupoAtivo = btn.dataset.group;
-    modalidadeAtiva = 'todas';
-    renderModalidades();
-    renderProdutos();
-  }));
+  document.querySelectorAll('.main-tab').forEach(btn => btn.addEventListener('click', () => selecionarGrupo(btn.dataset.group)));
   el('input-pesquisa').addEventListener('input', e => { termo = e.target.value.toLowerCase().trim(); renderProdutos(); });
   el('btn-abrir-carrinho').addEventListener('click', abrirCarrinho);
   el('btn-fechar-carrinho').addEventListener('click', fecharCarrinho);
@@ -66,6 +60,36 @@ function bindEventos(){
   el('btn-fechar-track').addEventListener('click', () => fecharModal('modal-track'));
   el('btn-consultar-pedido').addEventListener('click', consultarPedido);
   el('copy-pix').addEventListener('click', copiarPix);
+  el('mobile-menu-btn').addEventListener('click', alternarMenuMobile);
+  el('mobile-track').addEventListener('click', () => { fecharMenuMobile(); abrirModal('modal-track'); });
+  el('footer-track').addEventListener('click', () => abrirModal('modal-track'));
+  el('btn-ver-produtos').addEventListener('click', () => el('catalogo').scrollIntoView({behavior:'smooth'}));
+  el('btn-ver-promocoes').addEventListener('click', () => selecionarGrupo('promocao'));
+}
+
+function configurarMarca(){
+  el('footer-store').textContent = settings.STORE_NAME || 'PrimePeptide';
+  const number = String(settings.WHATSAPP_NUMBER || '').replace(/\D/g,'');
+  const link = el('whatsapp-float');
+  if(number){
+    link.href = `https://wa.me/${number}?text=${encodeURIComponent('Olá! Gostaria de ajuda com um produto da PrimePeptide.')}`;
+    link.style.display = 'flex';
+  } else {
+    link.style.display = 'none';
+  }
+}
+
+function alternarMenuMobile(){
+  const menu = el('mobile-nav');
+  const aberto = menu.classList.toggle('aberto');
+  el('mobile-menu-btn').setAttribute('aria-expanded', String(aberto));
+}
+function fecharMenuMobile(){ el('mobile-nav').classList.remove('aberto'); el('mobile-menu-btn').setAttribute('aria-expanded','false'); }
+function selecionarGrupo(grupo){
+  grupoAtivo = grupo; modalidadeAtiva = 'todas';
+  document.querySelectorAll('.main-tab').forEach(b => b.classList.toggle('ativa', b.dataset.group === grupo));
+  renderModalidades(); renderProdutos(); fecharMenuMobile();
+  el('catalogo').scrollIntoView({behavior:'smooth'});
 }
 
 function produtosDoGrupo(){
