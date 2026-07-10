@@ -11,7 +11,7 @@ if (!process.env.DATABASE_URL) {
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : { rejectUnauthorized: false }
 });
 
 function convertPlaceholders(sql) {
@@ -21,22 +21,16 @@ function convertPlaceholders(sql) {
 
 async function run(sql, params = []) {
   const pgSql = convertPlaceholders(sql);
-
   const isInsert = /^\s*INSERT\s+/i.test(pgSql);
   const hasReturning = /\sRETURNING\s+/i.test(pgSql);
-
   const insertNeedsId =
     /^\s*INSERT\s+INTO\s+products/i.test(pgSql) ||
     /^\s*INSERT\s+INTO\s+orders/i.test(pgSql) ||
     /^\s*INSERT\s+INTO\s+order_items/i.test(pgSql) ||
     /^\s*INSERT\s+INTO\s+admin_users/i.test(pgSql);
 
-  const finalSql = isInsert && insertNeedsId && !hasReturning
-    ? `${pgSql} RETURNING id`
-    : pgSql;
-
+  const finalSql = isInsert && insertNeedsId && !hasReturning ? `${pgSql} RETURNING id` : pgSql;
   const result = await pool.query(finalSql, params);
-
   return {
     lastID: result.rows && result.rows[0] ? result.rows[0].id : undefined,
     changes: result.rowCount
@@ -44,14 +38,12 @@ async function run(sql, params = []) {
 }
 
 async function get(sql, params = []) {
-  const pgSql = convertPlaceholders(sql);
-  const result = await pool.query(pgSql, params);
+  const result = await pool.query(convertPlaceholders(sql), params);
   return result.rows[0];
 }
 
 async function all(sql, params = []) {
-  const pgSql = convertPlaceholders(sql);
-  const result = await pool.query(pgSql, params);
+  const result = await pool.query(convertPlaceholders(sql), params);
   return result.rows;
 }
 
@@ -63,25 +55,35 @@ async function initDb() {
     description TEXT,
     objectives TEXT,
     category TEXT,
+    product_group TEXT DEFAULT 'peptideos',
+    modalities TEXT DEFAULT '',
     price NUMERIC(10,2) DEFAULT 0,
     type TEXT DEFAULT 'normal',
+    discount_percent NUMERIC(5,2) DEFAULT 0,
     active INTEGER DEFAULT 1,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   )`);
+
+  await run(`ALTER TABLE products ADD COLUMN IF NOT EXISTS product_group TEXT DEFAULT 'peptideos'`);
+  await run(`ALTER TABLE products ADD COLUMN IF NOT EXISTS modalities TEXT DEFAULT ''`);
+  await run(`ALTER TABLE products ADD COLUMN IF NOT EXISTS discount_percent NUMERIC(5,2) DEFAULT 0`);
 
   await run(`CREATE TABLE IF NOT EXISTS orders (
     id SERIAL PRIMARY KEY,
     code TEXT UNIQUE NOT NULL,
     customer_name TEXT,
     customer_phone TEXT,
-    payment_method TEXT DEFAULT 'pix',
+    payment_method TEXT DEFAULT 'Pix',
+    payment_status TEXT DEFAULT 'Aguardando pagamento',
     total NUMERIC(10,2) DEFAULT 0,
     status TEXT DEFAULT 'Pedido recebido',
     notes TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   )`);
+
+  await run(`ALTER TABLE orders ADD COLUMN IF NOT EXISTS payment_status TEXT DEFAULT 'Aguardando pagamento'`);
 
   await run(`CREATE TABLE IF NOT EXISTS order_items (
     id SERIAL PRIMARY KEY,
@@ -104,6 +106,11 @@ async function initDb() {
     password_hash TEXT NOT NULL
   )`);
 
+  await run('CREATE INDEX IF NOT EXISTS idx_products_active_group ON products(active, product_group)');
+  await run('CREATE INDEX IF NOT EXISTS idx_orders_code ON orders(code)');
+  await run('CREATE INDEX IF NOT EXISTS idx_orders_created_at ON orders(created_at DESC)');
+  await run('CREATE INDEX IF NOT EXISTS idx_order_items_order_id ON order_items(order_id)');
+
   await seedSettings();
   await seedAdmin();
   await seedProducts();
@@ -113,62 +120,55 @@ async function seedSettings() {
   const defaults = {
     STORE_NAME: process.env.STORE_NAME || 'PrimePeptide',
     WHATSAPP_NUMBER: process.env.WHATSAPP_NUMBER || '5519999999999',
-    LOGO_URL: process.env.LOGO_URL || ''
+    LOGO_URL: process.env.LOGO_URL || '',
+    PIX_KEY: process.env.PIX_KEY || '',
+    PIX_HOLDER: process.env.PIX_HOLDER || '',
+    PIX_BANK: process.env.PIX_BANK || '',
+    PIX_INSTRUCTIONS: process.env.PIX_INSTRUCTIONS || 'Após o pagamento, envie o comprovante pelo WhatsApp.'
   };
 
   for (const [key, value] of Object.entries(defaults)) {
     const exists = await get('SELECT key FROM settings WHERE key = ?', [key]);
-
-    if (!exists) {
-      await run('INSERT INTO settings (key, value) VALUES (?, ?)', [key, value]);
-    }
+    if (!exists) await run('INSERT INTO settings (key, value) VALUES (?, ?)', [key, value]);
   }
 }
 
 async function seedAdmin() {
   const username = process.env.ADMIN_USER || 'admin';
   const password = process.env.ADMIN_PASSWORD || 'prime2026';
-
   const exists = await get('SELECT id FROM admin_users WHERE username = ?', [username]);
-
   if (!exists) {
-    const hash = await bcrypt.hash(password, 10);
+    const hash = await bcrypt.hash(password, 12);
     await run('INSERT INTO admin_users (username, password_hash) VALUES (?, ?)', [username, hash]);
   }
 }
 
 async function seedProducts() {
   const count = await get('SELECT COUNT(*) AS total FROM products');
-
   if (Number(count.total) > 0) return;
 
   const produtosPath = path.join(__dirname, 'public', 'produtos.json');
-
   if (!fs.existsSync(produtosPath)) return;
 
   const produtos = JSON.parse(fs.readFileSync(produtosPath, 'utf8'));
-
   for (const p of produtos) {
     await run(
-      `INSERT INTO products (name, image, description, objectives, category, price, type, active)
-       VALUES (?, ?, ?, ?, ?, ?, ?, 1)`,
+      `INSERT INTO products (name, image, description, objectives, category, product_group, modalities, price, type, discount_percent, active)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)`,
       [
         p.nome || p.name,
         p.imagem || p.image || '',
         p.descricao || p.description || '',
         p.objetivos || p.objectives || '',
         p.categoria || p.category || '',
+        p.grupo || p.product_group || 'peptideos',
+        Array.isArray(p.modalidades) ? p.modalidades.join(', ') : (p.modalidades || p.modalities || p.categoria || ''),
         Number(p.preco || p.price || 0),
-        p.tipo || p.type || 'normal'
+        p.tipo || p.type || 'normal',
+        Number(p.porcentagemPromocao || p.discount_percent || 0)
       ]
     );
   }
 }
 
-module.exports = {
-  pool,
-  run,
-  get,
-  all,
-  initDb
-};
+module.exports = { pool, run, get, all, initDb };
