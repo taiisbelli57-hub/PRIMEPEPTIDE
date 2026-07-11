@@ -24,6 +24,16 @@
         align-items: center !important;
         justify-content: center !important;
         position: relative !important;
+        width: 46px !important;
+        height: 46px !important;
+        padding: 0 !important;
+        border-radius: 50% !important;
+      }
+
+      .header__actions .cart-btn svg {
+        width: 24px !important;
+        height: 24px !important;
+        display: block !important;
       }
 
       .header__actions .track-btn {
@@ -38,13 +48,20 @@
         display: flex !important;
         position: fixed !important;
         right: 16px !important;
-        bottom: 16px !important;
+        bottom: 18px !important;
         z-index: 9999 !important;
         align-items: center !important;
+        justify-content: center !important;
+        width: 56px !important;
+        height: 56px !important;
+        padding: 0 !important;
+        border-radius: 50% !important;
       }
 
-      .whatsapp-float strong {
-        display: inline !important;
+      .whatsapp-float svg {
+        width: 30px !important;
+        height: 30px !important;
+        display: block !important;
       }
     }
   </style>
@@ -66,7 +83,15 @@
       </nav>
       <div class="header__actions">
         <button class="track-btn" id="btn-track" aria-label="Acompanhar pedido"><span></span><span class="action-label">Acompanhar pedido</span></button>
-        <button class="cart-btn" id="btn-abrir-carrinho" aria-label="Abrir carrinho"><span></span><span class="action-label">Carrinho</span><span id="cart-badge" class="cart-btn__badge" style="display:none">0</span></button>
+        <button class="cart-btn" id="btn-abrir-carrinho" aria-label="Abrir carrinho">
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="9" cy="20" r="1"></circle>
+            <circle cx="19" cy="20" r="1"></circle>
+            <path d="M3 4h2l2.4 10.2a2 2 0 0 0 2 1.6h7.9a2 2 0 0 0 2-1.6L21 7H6"></path>
+          </svg>
+          <span class="action-label">Carrinho</span>
+          <span id="cart-badge" class="cart-btn__badge" style="display:none">0</span>
+        </button>
       </div>
     </div>
     <nav class="mobile-nav" id="mobile-nav" aria-label="Menu mobile">
@@ -152,7 +177,12 @@
     </div>
   </section>
 
-  <a class="whatsapp-float" id="whatsapp-float" href="#" target="_blank" rel="noopener" aria-label="Falar no WhatsApp"><span></span><strong>Fale comigo</strong></a>
+  <a class="whatsapp-float" id="whatsapp-float" href="#" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">
+    <svg viewBox="0 0 32 32" aria-hidden="true" fill="currentColor">
+      <path d="M19.11 17.21c-.27-.14-1.6-.79-1.85-.88-.25-.09-.43-.14-.61.14-.18.27-.7.88-.86 1.06-.16.18-.32.2-.59.07-.27-.14-1.15-.42-2.19-1.35-.81-.72-1.36-1.61-1.52-1.88-.16-.27-.02-.42.12-.56.12-.12.27-.32.41-.47.14-.16.18-.27.27-.45.09-.18.05-.34-.02-.47-.07-.14-.61-1.47-.84-2.01-.22-.53-.45-.46-.61-.47h-.52c-.18 0-.47.07-.72.34-.25.27-.95.93-.95 2.26s.97 2.62 1.1 2.8c.14.18 1.9 2.91 4.61 4.08.64.28 1.15.45 1.54.57.65.21 1.24.18 1.71.11.52-.08 1.6-.65 1.83-1.29.23-.63.23-1.17.16-1.29-.07-.11-.25-.18-.52-.32z"></path>
+      <path d="M16.03 3.2c-7.06 0-12.8 5.73-12.8 12.79 0 2.25.59 4.45 1.71 6.39L3.13 29l6.78-1.78a12.75 12.75 0 0 0 6.12 1.56h.01c7.05 0 12.79-5.74 12.79-12.8 0-3.42-1.33-6.63-3.75-9.05A12.7 12.7 0 0 0 16.03 3.2zm0 23.42h-.01a10.6 10.6 0 0 1-5.4-1.48l-.39-.23-4.02 1.05 1.07-3.92-.25-.4a10.62 10.62 0 0 1-1.63-5.65c0-5.86 4.77-10.63 10.64-10.63 2.84 0 5.51 1.11 7.52 3.12a10.56 10.56 0 0 1 3.11 7.52c-.01 5.86-4.78 10.62-10.64 10.62z"></path>
+    </svg>
+  </a>
   <div class="toast" id="toast"></div>
 
   <footer class="footer">
