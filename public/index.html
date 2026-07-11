@@ -14,12 +14,10 @@
   <header class="header">
     <div class="header__inner">
       <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Abrir menu" aria-expanded="false">☰</button>
-
       <a class="brand" href="index.html" aria-label="PrimePeptide">
         <img id="logo-img" class="brand__logo" alt="Logo PrimePeptide" style="display:none" />
         <span id="logo-text" class="brand__fallback">PrimePeptide</span>
       </a>
-
       <nav class="desktop-nav" aria-label="Categorias principais">
         <button class="main-tab ativa" data-group="todos">Todos</button>
         <button class="main-tab" data-group="peptideos">Peptídeos</button>
@@ -27,20 +25,18 @@
         <button class="main-tab" data-group="promocao">Promoções</button>
         <button class="main-tab" data-group="combo">Combos</button>
       </nav>
-
       <div class="header__actions">
-        <button class="track-btn" id="btn-track" aria-label="Acompanhar pedido"><span>📦</span><span class="action-label">Acompanhar pedido</span></button>
-        <button class="cart-btn" id="btn-abrir-carrinho" aria-label="Abrir carrinho"><span>🛒</span><span class="action-label">Carrinho</span><span id="cart-badge" class="cart-btn__badge" style="display:none">0</span></button>
+        <button class="track-btn" id="btn-track" aria-label="Acompanhar pedido"><span></span><span class="action-label">Acompanhar pedido</span></button>
+        <button class="cart-btn" id="btn-abrir-carrinho" aria-label="Abrir carrinho"><span></span><span class="action-label">Carrinho</span><span id="cart-badge" class="cart-btn__badge" style="display:none">0</span></button>
       </div>
     </div>
-
     <nav class="mobile-nav" id="mobile-nav" aria-label="Menu mobile">
       <button class="main-tab ativa" data-group="todos">Todos</button>
       <button class="main-tab" data-group="peptideos">Peptídeos</button>
       <button class="main-tab" data-group="hormonios">Hormônios</button>
       <button class="main-tab" data-group="promocao">Promoções</button>
       <button class="main-tab" data-group="combo">Combos</button>
-      <button class="mobile-track" id="mobile-track">📦 Acompanhar pedido</button>
+      <button class="mobile-track" id="mobile-track"> Acompanhar pedido</button>
     </nav>
   </header>
 
@@ -57,23 +53,21 @@
   </section>
 
   <section class="trust-strip" aria-label="Diferenciais da loja">
-    <div><strong>📦 Embalagem discreta</strong><span>Proteção no transporte</span></div>
-    <div><strong>💳 Pagamento via Pix</strong><span>Processo simples e rápido</span></div>
-    <div><strong>🚚 Piracicaba sem frete</strong><span>Demais cidades sob consulta</span></div>
-    <div><strong>💬 Atendimento direto</strong><span>Suporte pelo WhatsApp</span></div>
+    <div><strong> Embalagem discreta</strong><span>Proteção no transporte</span></div>
+    <div><strong> Pagamento via Pix</strong><span>Processo simples e rápido</span></div>
+    <div><strong> Piracicaba sem frete</strong><span>Demais cidades sob consulta</span></div>
+    <div><strong> Atendimento direto</strong><span>Suporte pelo WhatsApp</span></div>
   </section>
 
   <section class="catalog-controls" id="catalogo">
     <div class="search">
-      <span>🔎</span>
+      <span></span>
       <input id="input-pesquisa" type="search" placeholder="Pesquisar por nome, objetivo ou modalidade..." autocomplete="off" />
     </div>
-    <div class="shipping-notice"><strong>Embalagem discreta e segura</strong> com plástico bolha para proteger no transporte!<br><strong>Piracicaba não cobramos frete.</strong><br>Demais cidades consultar frete.</div>
     <div class="modality-filter" id="modality-filter"></div>
   </section>
 
   <main class="grid" id="grid-produtos"></main>
-
   <div class="overlay" id="overlay"></div>
 
   <aside class="carrinho-painel" id="painel-carrinho">
@@ -119,7 +113,7 @@
     </div>
   </section>
 
-  <a class="whatsapp-float" id="whatsapp-float" href="#" target="_blank" rel="noopener" aria-label="Falar no WhatsApp"><span>💬</span><strong>Precisa de ajuda?</strong></a>
+  <a class="whatsapp-float" id="whatsapp-float" href="#" target="_blank" rel="noopener" aria-label="Falar no WhatsApp"><span></span><strong>Precisa de ajuda?</strong></a>
   <div class="toast" id="toast"></div>
 
   <footer class="footer">
@@ -127,6 +121,7 @@
     <div><a href="#catalogo">Produtos</a><button id="footer-track">Acompanhar pedido</button><a href="admin.html">Área administrativa</a></div>
     <p>© 2026 PrimePeptide. Todos os direitos reservados.</p>
   </footer>
+
   <script src="config.js"></script>
   <script src="script.js"></script>
 </body>
