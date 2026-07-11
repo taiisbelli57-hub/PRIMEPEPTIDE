@@ -9,6 +9,45 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
+
+  <style>
+    /* Mantém carrinho e atendimento visíveis no celular */
+    @media (max-width: 768px) {
+      .header__actions {
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+      }
+
+      .header__actions .cart-btn {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        position: relative !important;
+      }
+
+      .header__actions .track-btn {
+        display: none !important;
+      }
+
+      .header__actions .cart-btn .action-label {
+        display: none !important;
+      }
+
+      .whatsapp-float {
+        display: flex !important;
+        position: fixed !important;
+        right: 16px !important;
+        bottom: 16px !important;
+        z-index: 9999 !important;
+        align-items: center !important;
+      }
+
+      .whatsapp-float strong {
+        display: inline !important;
+      }
+    }
+  </style>
 </head>
 <body>
   <header class="header">
@@ -113,7 +152,7 @@
     </div>
   </section>
 
-  <a class="whatsapp-float" id="whatsapp-float" href="#" target="_blank" rel="noopener" aria-label="Falar no WhatsApp"><span></span><strong>Precisa de ajuda?</strong></a>
+  <a class="whatsapp-float" id="whatsapp-float" href="#" target="_blank" rel="noopener" aria-label="Falar no WhatsApp"><span></span><strong>Fale comigo</strong></a>
   <div class="toast" id="toast"></div>
 
   <footer class="footer">
