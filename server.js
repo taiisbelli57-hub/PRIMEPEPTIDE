@@ -106,9 +106,13 @@ app.post('/api/visits', async (req,res)=>{
   } else {
     const visitorId=cleanText(req.body.visitorId,120);
     if(!/^[a-zA-Z0-9._:-]{8,120}$/.test(visitorId)) return res.status(400).json({error:'Identificador de visita inválido.'});
-    const recent=await get("SELECT id FROM site_visits WHERE visitor_id=? AND visited_at >= CURRENT_TIMESTAMP - INTERVAL '30 minutes' ORDER BY visited_at DESC LIMIT 1",[visitorId]);
+    const recent=await get(`SELECT id FROM site_visits
+      WHERE ip_address=?
+      AND visited_at >= (date_trunc('day', CURRENT_TIMESTAMP AT TIME ZONE 'America/Sao_Paulo') AT TIME ZONE 'America/Sao_Paulo')
+      AND visited_at < ((date_trunc('day', CURRENT_TIMESTAMP AT TIME ZONE 'America/Sao_Paulo') + INTERVAL '1 day') AT TIME ZONE 'America/Sao_Paulo')
+      LIMIT 1`,[ip]);
     if(recent) {
-      reason='recent';
+      reason='already_counted_today';
     } else {
       await run('INSERT INTO site_visits (visitor_id,ip_address,user_agent,page_path,referrer,visited_at) VALUES (?,?,?,?,?,CURRENT_TIMESTAMP)',[visitorId,ip,userAgent(req),cleanText(req.body.pagePath,500),cleanText(req.body.referrer,1000)]);
       counted=true;
